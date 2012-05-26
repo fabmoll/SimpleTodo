@@ -1,0 +1,334 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="SimpleTodo.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"    
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:rlb="clr-namespace:SimpleTodo" xmlns:k4fControls="clr-namespace:Coding4Fun.Phone.Controls;assembly=Coding4Fun.Phone.Controls" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="True"
+    DataContext="{Binding Main, Source={StaticResource Locator}}">
+
+    <phone:PhoneApplicationPage.Resources>
+        <ControlTemplate x:Key="PhoneDisabledTextBoxTemplate" TargetType="TextBox">
+            <ContentControl x:Name="ContentElement" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="{StaticResource PhoneTextBoxInnerMargin}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="Stretch"/>
+        </ControlTemplate>
+        <Style x:Key="AddTaskTextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilyNormal}"/>
+            <Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
+            <Setter Property="Background" Value="{StaticResource PhoneTextBoxBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource PhoneTextBoxForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PhoneTextBoxBrush}"/>
+            <Setter Property="SelectionBackground" Value="{StaticResource PhoneAccentBrush}"/>
+            <Setter Property="SelectionForeground" Value="{StaticResource PhoneTextBoxSelectionForegroundBrush}"/>
+            <Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid Background="Transparent">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="MouseOver"/>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="EnabledBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Collapsed</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DisabledOrReadonlyBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="ReadOnly">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="EnabledBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Collapsed</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DisabledOrReadonlyBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="DisabledOrReadonlyBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneTextBoxBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="DisabledOrReadonlyBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FF701660"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="DisabledOrReadonlyContent">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneTextBoxReadOnlyBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                    <VisualState x:Name="Focused">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="EnabledBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneTextBoxEditBackgroundBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="EnabledBorder">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FF701660"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unfocused"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border x:Name="EnabledBorder" BorderBrush="#FF701660" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Margin="{StaticResource PhoneTouchTargetOverhang}">
+                                <ContentControl x:Name="ContentElement" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="{StaticResource PhoneTextBoxInnerMargin}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="Stretch"/>
+                            </Border>
+                            <Border x:Name="DisabledOrReadonlyBorder" BorderBrush="{StaticResource PhoneDisabledBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Margin="{StaticResource PhoneTouchTargetOverhang}" Visibility="Collapsed">
+                                <TextBox x:Name="DisabledOrReadonlyContent" Background="Transparent" Foreground="{StaticResource PhoneDisabledBrush}" FontWeight="{TemplateBinding FontWeight}" FontStyle="{TemplateBinding FontStyle}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" IsReadOnly="True" SelectionForeground="{TemplateBinding SelectionForeground}" SelectionBackground="{TemplateBinding SelectionBackground}" TextAlignment="{TemplateBinding TextAlignment}" TextWrapping="{TemplateBinding TextWrapping}" Text="{TemplateBinding Text}" Template="{StaticResource PhoneDisabledTextBoxTemplate}"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Name="AppBarText" TargetType="ContentControl">
+        	<Setter Property="HorizontalAlignment" Value="Center"/>
+        	<Setter Property="Margin" Value="0"/>
+        	<Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style x:Key="AddTodoItemRoundButtonStyle" TargetType="k4fControls:RoundButton">
+            <Setter Property="BorderBrush" Value="#FF701660"/>
+        	<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+        	<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiBold}"/>
+        	<Setter Property="FontSize" Value="12"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="k4fControls:RoundButton">
+        				<Grid>
+        					<VisualStateManager.VisualStateGroups>
+        						<VisualStateGroup x:Name="CommonStates">
+        							<VisualState x:Name="Normal"/>
+        							<VisualState x:Name="MouseOver"/>
+        							<VisualState x:Name="Pressed">
+        								<Storyboard>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="ButtonBackground">
+        										<DiscreteObjectKeyFrame KeyTime="0" Value="LightGray"/>
+        									</ObjectAnimationUsingKeyFrames>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="ButtonBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FF701660"/>
+        									</ObjectAnimationUsingKeyFrames>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="ButtonForeground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FF701660"/>
+        									</ObjectAnimationUsingKeyFrames>
+        								</Storyboard>
+        							</VisualState>
+        							<VisualState x:Name="Disabled">
+        								<Storyboard>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="ButtonBackground">
+        										<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TransparentBrush}"/>
+        									</ObjectAnimationUsingKeyFrames>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="ButtonBackground">
+        										<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TransparentBrush}"/>
+        									</ObjectAnimationUsingKeyFrames>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="ButtonForeground">
+        										<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+        									</ObjectAnimationUsingKeyFrames>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentBody">
+        										<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+        									</ObjectAnimationUsingKeyFrames>
+        								</Storyboard>
+        							</VisualState>
+        						</VisualStateGroup>
+        					</VisualStateManager.VisualStateGroups>
+        					<Rectangle Fill="Transparent"/>
+        					<Border BorderBrush="Transparent" BorderThickness="0" Height="{TemplateBinding Height}" Padding="{TemplateBinding Padding}" Width="{TemplateBinding Width}">
+        						<StackPanel HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Orientation="{TemplateBinding Orientation}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+        							<Grid Height="{TemplateBinding ButtonHeight}" Margin="0,-10, 0, 0" Width="{TemplateBinding ButtonWidth}">
+        								<Ellipse x:Name="ButtonBackground" Fill="{TemplateBinding Background}" Margin="{StaticResource PhoneTouchTargetOverhang}" Stroke="{TemplateBinding BorderBrush}" StrokeThickness="{StaticResource PhoneStrokeThickness}"/>
+        								<Ellipse x:Name="ButtonForeground" Fill="{TemplateBinding Foreground}" Margin="{StaticResource PhoneTouchTargetOverhang}">
+        									<Ellipse.OpacityMask>
+        										<ImageBrush x:Name="OpacityImageBrush" Stretch="{TemplateBinding Stretch}"/>
+        									</Ellipse.OpacityMask>
+        								</Ellipse>
+        							</Grid>
+        							<ContentControl x:Name="ContentBody" Content="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" Style="{StaticResource AppBarText}"/>
+        						</StackPanel>
+        					</Border>
+        				</Grid>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
+
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="WhiteSmoke">
+        <!--Pivot Control-->
+        <controls:Pivot Title="{Binding ApplicationTitle}" Foreground="#701660">
+            <!--Pivot item one-->
+            <controls:PivotItem Header="{Binding TodoPageName}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <rlb:ReorderListBox
+                        x:Name="reorderListBoxTodo"
+                        Grid.Row="0"
+                        Margin="12,0,0,12"
+                        IsReorderEnabled="True"
+                        ItemsSource="{Binding ItemsTodo}">
+
+                        <rlb:ReorderListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <toolkit:ContextMenuService.ContextMenu>
+                                        <toolkit:ContextMenu>
+                                            <toolkit:MenuItem x:Name="DoneMenuItem" Header="Done"
+                                                Command="{Binding Main.DoneCommand, Source={StaticResource Locator}}"
+                                                CommandParameter="{Binding}"/>
+                                            <toolkit:MenuItem x:Name="EditMenuItem" Header="Edit"  Command="{Binding Main.EditTodoItemCommand, Source={StaticResource Locator}}"
+                                                CommandParameter="{Binding}"/>
+                                            <toolkit:MenuItem x:Name="DeleteTodoMenuItem" Header="Delete"
+                                                Command="{Binding Main.DeleteTodoItemCommand, Source={StaticResource Locator}}"
+                                                CommandParameter="{Binding}"/>
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
+                                    <TextBlock Foreground="Gray" TextWrapping="Wrap"  Margin="12,4,12,4" FontSize="36" Text="{Binding Description}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </rlb:ReorderListBox.ItemTemplate>
+
+                        <!--
+                          The ReorderListBoxItem DragHandle appearance can be customized
+                          via the ItemContainerStyle. The default polygons are copied below.
+            
+                          Notes:
+                            - The width MUST be equal to 52, required by other parts of the RLB template.
+                            - The background SHOULD be non-empty (Transparent is OK) to enable
+                              dragging on any part of the handle area, not just the polygons.
+                         -->
+                        <rlb:ReorderListBox.ItemContainerStyle>
+                            <Style TargetType="rlb:ReorderListBoxItem">
+                                <Setter Property="DragHandleTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <Canvas Width="52" Height="48" Background="Transparent">
+                                                <Polygon Fill="Gray" Points="16,20 4,20 22,4 22,44 16,44" />
+                                                <Polygon Fill="Gray" Points="32,28 44,28 26,44 26,4 32,4" />
+                                            </Canvas>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </rlb:ReorderListBox.ItemContainerStyle>
+                    </rlb:ReorderListBox>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".8*"/>
+                            <ColumnDefinition Width=".2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox Style="{StaticResource AddTaskTextBoxStyle}"  Grid.Column="0" x:Name="textBoxTask" Height="72" MaxLength="80" Text="{Binding TaskDescription, Mode=TwoWay}"/>
+                        <k4fControls:RoundButton BorderBrush="#FF701660" Background="WhiteSmoke" Foreground="#FF701660" x:Name="AddButton" ImageSource="/Images/Add.png" Grid.Column="2" Height="66" Margin="0,8,0,0" Command="{Binding AddCommand}" Style="{StaticResource AddTodoItemRoundButtonStyle}" />
+                    </Grid>
+
+                </Grid>
+            </controls:PivotItem>
+
+            <!--Pivot item two-->
+            <controls:PivotItem Header="{Binding DonePageName}">
+                <Grid>
+                    <rlb:ReorderListBox
+                        x:Name="reorderListBoxDone"
+                        Grid.Row="0"
+                        Margin="12,0,0,12"
+                        IsReorderEnabled="False"
+                        ItemsSource="{Binding ItemsDone}">
+
+                        <rlb:ReorderListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <toolkit:ContextMenuService.ContextMenu>
+                                        <toolkit:ContextMenu>
+                                            <toolkit:MenuItem x:Name="Undone" Header="Undone"
+                                                Command="{Binding Main.UndoneCommand, Source={StaticResource Locator}}"
+                                                CommandParameter="{Binding}"/>
+                                            <toolkit:MenuItem x:Name="DeleteDoneMenuItem" Header="Delete"
+                                                Command="{Binding Main.DeleteDoneItemCommand, Source={StaticResource Locator}}"
+                                                CommandParameter="{Binding}"/>
+                                        </toolkit:ContextMenu>
+                                    </toolkit:ContextMenuService.ContextMenu>
+                                    <TextBlock Foreground="Gray" TextWrapping="Wrap"  Margin="12,4,12,4" FontSize="36" Text="{Binding Description}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </rlb:ReorderListBox.ItemTemplate>
+
+                        <!--
+                          The ReorderListBoxItem DragHandle appearance can be customized
+                          via the ItemContainerStyle. The default polygons are copied below.
+            
+                          Notes:
+                            - The width MUST be equal to 52, required by other parts of the RLB template.
+                            - The background SHOULD be non-empty (Transparent is OK) to enable
+                              dragging on any part of the handle area, not just the polygons.
+                         -->
+                        <rlb:ReorderListBox.ItemContainerStyle>
+                            <Style TargetType="rlb:ReorderListBoxItem">
+                                <Setter Property="DragHandleTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <Canvas Width="52" Height="48" Background="Transparent">
+                                                <Polygon Fill="Gray" Points="16,20 4,20 22,4 22,44 16,44" />
+                                                <Polygon Fill="Gray" Points="32,28 44,28 26,44 26,4 32,4" />
+                                            </Canvas>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </rlb:ReorderListBox.ItemContainerStyle>
+                    </rlb:ReorderListBox>
+                </Grid>
+            </controls:PivotItem>
+        </controls:Pivot>
+    </Grid>
+
+</phone:PhoneApplicationPage>
