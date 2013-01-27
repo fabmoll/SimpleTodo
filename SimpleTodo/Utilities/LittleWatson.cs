@@ -51,7 +51,7 @@ namespace SimpleTodo.Utilities
 					if (MessageBox.Show("A problem occurred the last time you ran this application. Would you like to send an email to report it?", "Problem Report", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
 					{
 						EmailComposeTask email = new EmailComposeTask();
-						email.To = "fabrice.moll@hotmail.com";
+						email.To = "your@email.com";
 						email.Subject = "SimpleTodo auto-generated problem report";
 						email.Body = contents;
 						SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication()); // line added 1/15/2011
